@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audit Réseaux Sociaux — Vitrine Digitale</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1A2B4A;
+  --orange: #FF6B00;
+  --orange-light: #FFF0E6;
+  --white: #FFFFFF;
+  --gray-50: #F8F8F6;
+  --gray-100: #EEEDE9;
+  --gray-300: #C4C3BC;
+  --gray-500: #888780;
+  --gray-800: #2C2C2A;
+  --green: #0F6E56;
+  --green-light: #E1F5EE;
+  --amber: #854F0B;
+  --amber-light: #FAEEDA;
+  --red: #A32D2D;
+  --red-light: #FCEBEB;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-800);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.app-header {
+  background: var(--navy);
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  box-shadow: 0 2px 20px rgba(26,43,74,0.3);
+}
+
+.app-header .logo {
+  font-family: 'DM Serif Display', serif;
+  color: var(--white);
+  font-size: 18px;
+  letter-spacing: 0.01em;
+}
+
+.app-header .logo span { color: var(--orange); }
+
+.header-score {
+  background: var(--orange);
+  color: var(--white);
+  padding: 6px 18px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.page-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 32px;
+  color: var(--navy);
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  color: var(--gray-500);
+  font-size: 14px;
+  margin-bottom: 2rem;
+}
+
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--gray-100);
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.card-icon {
+  width: 34px;
+  height: 34px;
+  background: var(--navy);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.section-score {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--orange);
+  background: var(--orange-light);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.client-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.client-grid .full { grid-column: 1 / -1; }
+
+.field-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+  width: 100%;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--gray-800);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--navy);
+  background: var(--white);
+}
+
+textarea { min-height: 80px; resize: vertical; }
+
+.criteria-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--gray-50);
+}
+
+.criteria-row:last-of-type { border-bottom: none; }
+
+.criteria-info { flex: 1; }
+
+.criteria-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray-800);
+}
+
+.criteria-hint {
+  font-size: 11px;
+  color: var(--gray-500);
+  margin-top: 2px;
+}
+
+.btn-group { display: flex; gap: 5px; flex-shrink: 0; }
+
+.opt-btn {
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--gray-300);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--white);
+  color: var(--gray-500);
+  transition: all 0.15s;
+  white-space: nowrap;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.opt-btn:hover { border-color: var(--navy); color: var(--navy); }
+.opt-btn.sel-oui { background: var(--green-light); border-color: var(--green); color: var(--green); }
+.opt-btn.sel-moyen { background: var(--amber-light); border-color: var(--amber); color: var(--amber); }
+.opt-btn.sel-non { background: var(--red-light); border-color: var(--red); color: var(--red); }
+
+.progress-wrap { margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--gray-100); }
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--gray-500);
+  margin-bottom: 6px;
+}
+
+.progress-track {
+  height: 5px;
+  background: var(--gray-100);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--navy), var(--orange));
+  border-radius: 3px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+.engage-calc {
+  background: var(--gray-50);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  margin-top: 0.75rem;
+}
+
+.engage-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.engage-row label {
+  font-size: 13px;
+  color: var(--gray-500);
+  min-width: 130px;
+}
+
+.engage-row input { width: 130px; }
+
+.engage-result {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--navy);
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.engage-badge {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 12px;
+  border-radius: 20px;
+}
+
+.score-dashboard {
+  background: var(--navy);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.score-dashboard-title {
+  font-family: 'DM Serif Display', serif;
+  color: var(--white);
+  font-size: 20px;
+  margin-bottom: 1.25rem;
+}
+
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 1.25rem;
+}
+
+.score-tile {
+  background: rgba(255,255,255,0.07);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.score-tile .t-label {
+  font-size: 10px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.score-tile .t-val {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.score-tile .t-max {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+}
+
+.total-display {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 1.25rem;
+  text-align: center;
+}
+
+.total-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 52px;
+  color: var(--orange);
+  line-height: 1;
+}
+
+.total-denom {
+  font-size: 20px;
+  color: rgba(255,255,255,0.4);
+}
+
+.total-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 4px;
+}
+
+.verdict-text {
+  font-size: 15px;
+  color: var(--white);
+  margin-top: 10px;
+  font-style: italic;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 1.5rem;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 20px;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: var(--orange);
+  color: var(--white);
+}
+
+.btn-primary:hover { background: #e55a00; transform: translateY(-1px); }
+
+.btn-secondary {
+  background: var(--white);
+  color: var(--navy);
+  border: 1px solid var(--gray-100);
+}
+
+.btn-secondary:hover { border-color: var(--navy); transform: translateY(-1px); }
+
+.notes-grid {
+  display: grid;
+  gap: 14px;
+}
+
+@media (max-width: 600px) {
+  .client-grid { grid-template-columns: 1fr; }
+  .score-grid { grid-template-columns: repeat(2, 1fr); }
+  .actions { grid-template-columns: 1fr; }
+  .criteria-row { flex-direction: column; align-items: flex-start; }
+  .page-title { font-size: 24px; }
+}
+
+@media print {
+  .app-header, .actions { display: none !important; }
+  body { background: white; }
+  .card { break-inside: avoid; box-shadow: none; border: 1px solid #eee; }
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="logo">Vitrine <span>Digitale</span> — Audit</div>
+  <div class="header-score" id="header-score">0 / 30</div>
+</header>
+
+<div class="container">
+
+  <div style="margin-bottom: 2rem;">
+    <h1 class="page-title">Audit réseaux sociaux</h1>
+    <p class="page-subtitle">Remplissez chaque section pour générer le rapport PDF complet</p>
+  </div>
+
+  <!-- Infos client -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon">👤</div>
+        Informations client
+      </div>
+    </div>
+    <div class="client-grid">
+      <div class="full">
+        <div class="field-label">Nom du commerce</div>
+        <input type="text" id="client-name" placeholder="Ex : Pizzeria Da Gusto" oninput="updateHeader()">
+      </div>
+      <div>
+        <div class="field-label">Secteur d'activité</div>
+        <select id="client-sector">
+          <option value="">Choisir...</option>
+          <option>Restaurant / Café</option>
+          <option>Boutique de vêtements</option>
+          <option>Épicerie / Alimentation</option>
+          <option>Artisan / Fabricant</option>
+          <option>Beauté / Bien-être</option>
+          <option>Sport / Loisirs</option>
+          <option>Autre commerce local</option>
+        </select>
+      </div>
+      <div>
+        <div class="field-label">Date de l'audit</div>
+        <input type="date" id="audit-date">
+      </div>
+      <div>
+        <div class="field-label">Compte Instagram</div>
+        <input type="text" id="insta" placeholder="@nomducompte">
+      </div>
+      <div>
+        <div class="field-label">Compte Facebook</div>
+        <input type="text" id="fb" placeholder="Nom de la page">
+      </div>
+      <div>
+        <div class="field-label">Nb abonnés Instagram</div>
+        <input type="number" id="followers-insta" placeholder="Ex : 450">
+      </div>
+      <div>
+        <div class="field-label">Nb abonnés Facebook</div>
+        <input type="number" id="followers-fb" placeholder="Ex : 820">
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 1 : Page -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon">🖼</div>
+        1. Optimisation de la page
+      </div>
+      <div class="section-score" id="score-page">0 / 5</div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Photo de profil professionnelle</div>
+        <div class="criteria-hint">Visible, nette, en lien avec le commerce</div>
+      </div>
+      <div class="btn-group" data-section="page" data-index="0" data-max="1">
+        <button class="opt-btn" onclick="setScore(this,'oui',1)">Oui</button>
+        <button class="opt-btn" onclick="setScore(this,'moyen',0.5)">Moyen</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">Non</button>
+      </div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Bio claire et complète</div>
+        <div class="criteria-hint">Activité, lieu, horaires, contact</div>
+      </div>
+      <div class="btn-group" data-section="page" data-index="1" data-max="1">
+        <button class="opt-btn" onclick="setScore(this,'oui',1)">Oui</button>
+        <button class="opt-btn" onclick="setScore(this,'moyen',0.5)">Moyen</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">Non</button>
+      </div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Lien en bio présent</div>
+        <div class="criteria-hint">Site web, Google Maps ou lien de réservation</div>
+      </div>
+      <div class="btn-group" data-section="page" data-index="2" data-max="1">
+        <button class="opt-btn" onclick="setScore(this,'oui',1)">Oui</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">Non</button>
+      </div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Bouton de contact configuré</div>
+        <div class="criteria-hint">Appel, email ou itinéraire</div>
+      </div>
+      <div class="btn-group" data-section="page" data-index="3" data-max="1">
+        <button class="opt-btn" onclick="setScore(this,'oui',1)">Oui</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">Non</button>
+      </div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Highlights Instagram organisés</div>
+        <div class="criteria-hint">Stories épinglées par thème</div>
+      </div>
+      <div class="btn-group" data-section="page" data-index="4" data-max="1">
+        <button class="opt-btn" onclick="setScore(this,'oui',1)">Oui</button>
+        <button class="opt-btn" onclick="setScore(this,'moyen',0.5)">Moyen</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">Non</button>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-labels"><span>Optimisation page</span><span id="pct-page">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="bar-page"></div></div>
+    </div>
+  </div>
+
+  <!-- Section 2 : Régularité -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon">📅</div>
+        2. Régularité de publication
+      </div>
+      <div class="section-score" id="score-publi">0 / 5</div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Fréquence mensuelle</div>
+        <div class="criteria-hint">Nombre de posts publiés par mois</div>
+      </div>
+      <div class="btn-group" data-section="publi" data-index="0" data-max="2">
+        <button class="opt-btn" onclick="setScore(this,'oui',2)">+12/mois</button>
+        <button class="opt-btn" onclick="setScore(this,'moyen',1)">4-12/mois</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">-4/mois</button>
+      </div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Dernier post publié</div>
+        <div class="criteria-hint">Ancienneté de la dernière publication</div>
+      </div>
+      <div class="btn-group" data-section="publi" data-index="1" data-max="2">
+        <button class="opt-btn" onclick="setScore(this,'oui',2)">- 7 jours</button>
+        <button class="opt-btn" onclick="setScore(this,'moyen',1)">7-30 jours</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">+ 30 jours</button>
+      </div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Stories régulières</div>
+        <div class="criteria-hint">Publications en stories au moins 1x/semaine</div>
+      </div>
+      <div class="btn-group" data-section="publi" data-index="2" data-max="1">
+        <button class="opt-btn" onclick="setScore(this,'oui',1)">Régulières</button>
+        <button class="opt-btn" onclick="setScore(this,'moyen',0.5)">Parfois</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">Jamais</button>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-labels"><span>Régularité</span><span id="pct-publi">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="bar-publi"></div></div>
+    </div>
+  </div>
+
+  <!-- Section 3 : Engagement -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon">❤️</div>
+        3. Taux d'engagement
+      </div>
+      <div class="section-score" id="score-engage">0 / 5</div>
+    </div>
+    <div class="engage-calc">
+      <div class="engage-row">
+        <label>Abonnés</label>
+        <input type="number" id="nb-abonnes" placeholder="Ex : 500" oninput="calcEngagement()">
+      </div>
+      <div class="engage-row">
+        <label>Likes moyens / post</label>
+        <input type="number" id="nb-likes" placeholder="Ex : 25" oninput="calcEngagement()">
+      </div>
+      <div class="engage-row">
+        <label>Commentaires moyens</label>
+        <input type="number" id="nb-comments" placeholder="Ex : 3" oninput="calcEngagement()">
+      </div>
+      <div class="engage-result">
+        <span id="engage-result">Taux : —</span>
+        <span class="engage-badge" id="engage-badge"></span>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-labels"><span>Engagement</span><span id="pct-engage">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="bar-engage"></div></div>
+    </div>
+  </div>
+
+  <!-- Section 4 : Contenu -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon">🎨</div>
+        4. Qualité du contenu
+      </div>
+      <div class="section-score" id="score-contenu">0 / 5</div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Visuels cohérents et professionnels</div>
+        <div class="criteria-hint">Couleurs, style, qualité des images</div>
+      </div>
+      <div class="btn-group" data-section="contenu" data-index="0" data-max="1">
+        <button class="opt-btn" onclick="setScore(this,'oui',1)">Oui</button>
+        <button class="opt-btn" onclick="setScore(this,'moyen',0.5)">Moyen</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">Non</button>
+      </div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Légendes bien rédigées</div>
+        <div class="criteria-hint">Accroche, corps de texte, appel à l'action</div>
+      </div>
+      <div class="btn-group" data-section="contenu" data-index="1" data-max="1">
+        <button class="opt-btn" onclick="setScore(this,'oui',1)">Oui</button>
+        <button class="opt-btn" onclick="setScore(this,'moyen',0.5)">Moyen</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">Non</button>
+      </div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Hashtags utilisés</div>
+        <div class="criteria-hint">Pertinents, variés, en lien avec l'activité</div>
+      </div>
+      <div class="btn-group" data-section="contenu" data-index="2" data-max="1">
+        <button class="opt-btn" onclick="setScore(this,'oui',1)">Oui</button>
+        <button class="opt-btn" onclick="setScore(this,'moyen',0.5)">Moyen</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">Non</button>
+      </div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Diversité des formats</div>
+        <div class="criteria-hint">Posts, reels, stories, carrousels</div>
+      </div>
+      <div class="btn-group" data-section="contenu" data-index="3" data-max="1">
+        <button class="opt-btn" onclick="setScore(this,'oui',1)">Oui</button>
+        <button class="opt-btn" onclick="setScore(this,'moyen',0.5)">Moyen</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">Non</button>
+      </div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Feed Instagram harmonieux</div>
+        <div class="criteria-hint">Cohérence visuelle globale du profil</div>
+      </div>
+      <div class="btn-group" data-section="contenu" data-index="4" data-max="1">
+        <button class="opt-btn" onclick="setScore(this,'oui',1)">Oui</button>
+        <button class="opt-btn" onclick="setScore(this,'moyen',0.5)">Moyen</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">Non</button>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-labels"><span>Qualité contenu</span><span id="pct-contenu">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="bar-contenu"></div></div>
+    </div>
+  </div>
+
+  <!-- Section 5 : Stratégie -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon">💡</div>
+        5. Stratégie éditoriale
+      </div>
+      <div class="section-score" id="score-strat">0 / 5</div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Ligne éditoriale identifiable</div>
+        <div class="criteria-hint">Thème, ton et style reconnaissables</div>
+      </div>
+      <div class="btn-group" data-section="strat" data-index="0" data-max="1">
+        <button class="opt-btn" onclick="setScore(this,'oui',1)">Oui</button>
+        <button class="opt-btn" onclick="setScore(this,'moyen',0.5)">Moyen</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">Non</button>
+      </div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Variété des piliers de contenu</div>
+        <div class="criteria-hint">Produit, humain, éducatif, engagement, actualité</div>
+      </div>
+      <div class="btn-group" data-section="strat" data-index="1" data-max="2">
+        <button class="opt-btn" onclick="setScore(this,'oui',2)">Tous présents</button>
+        <button class="opt-btn" onclick="setScore(this,'moyen',1)">Partiellement</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">Non</button>
+      </div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Appels à l'action présents</div>
+        <div class="criteria-hint">Lien en bio, réservation, contact</div>
+      </div>
+      <div class="btn-group" data-section="strat" data-index="2" data-max="1">
+        <button class="opt-btn" onclick="setScore(this,'oui',1)">Oui</button>
+        <button class="opt-btn" onclick="setScore(this,'moyen',0.5)">Parfois</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">Non</button>
+      </div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Utilisation des reels</div>
+        <div class="criteria-hint">Format favorisé par l'algorithme Instagram</div>
+      </div>
+      <div class="btn-group" data-section="strat" data-index="3" data-max="1">
+        <button class="opt-btn" onclick="setScore(this,'oui',1)">Réguliers</button>
+        <button class="opt-btn" onclick="setScore(this,'moyen',0.5)">Parfois</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">Jamais</button>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-labels"><span>Stratégie</span><span id="pct-strat">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="bar-strat"></div></div>
+    </div>
+  </div>
+
+  <!-- Section 6 : Concurrence -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon">🏆</div>
+        6. Positionnement vs concurrence
+      </div>
+      <div class="section-score" id="score-concur">0 / 5</div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Abonnés vs concurrents</div>
+        <div class="criteria-hint">Comparé à 2-3 commerces similaires dans la ville</div>
+      </div>
+      <div class="btn-group" data-section="concur" data-index="0" data-max="2">
+        <button class="opt-btn" onclick="setScore(this,'oui',2)">Devant</button>
+        <button class="opt-btn" onclick="setScore(this,'moyen',1)">Égal</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">Derrière</button>
+      </div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Fréquence vs concurrents</div>
+        <div class="criteria-hint">Publie-t-il plus ou moins souvent ?</div>
+      </div>
+      <div class="btn-group" data-section="concur" data-index="1" data-max="2">
+        <button class="opt-btn" onclick="setScore(this,'oui',2)">Plus souvent</button>
+        <button class="opt-btn" onclick="setScore(this,'moyen',1)">Pareil</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">Moins souvent</button>
+      </div>
+    </div>
+    <div class="criteria-row">
+      <div class="criteria-info">
+        <div class="criteria-name">Qualité vs concurrents</div>
+        <div class="criteria-hint">Visuels, légendes, engagement comparés</div>
+      </div>
+      <div class="btn-group" data-section="concur" data-index="2" data-max="1">
+        <button class="opt-btn" onclick="setScore(this,'oui',1)">Meilleure</button>
+        <button class="opt-btn" onclick="setScore(this,'moyen',0.5)">Similaire</button>
+        <button class="opt-btn" onclick="setScore(this,'non',0)">Inférieure</button>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-labels"><span>Concurrence</span><span id="pct-concur">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="bar-concur"></div></div>
+    </div>
+  </div>
+
+  <!-- Notes -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon">📝</div>
+        Notes et recommandations
+      </div>
+    </div>
+    <div class="notes-grid">
+      <div>
+        <div class="field-label">Points forts identifiés</div>
+        <textarea id="note-forts" placeholder="Ex : Bonne qualité photo, compte actif, communauté engagée..."></textarea>
+      </div>
+      <div>
+        <div class="field-label">Points d'amélioration</div>
+        <textarea id="note-amelio" placeholder="Ex : Pas de reels, bio incomplète, trop peu de posts..."></textarea>
+      </div>
+      <div>
+        <div class="field-label">Ma proposition concrète</div>
+        <textarea id="note-offre" placeholder="Ex : Pack Essentiel 347€/mois — 12 posts + 2 reels + stories + rapport mensuel..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Score dashboard -->
+  <div class="score-dashboard">
+    <div class="score-dashboard-title">Résultat global de l'audit</div>
+    <div class="score-grid">
+      <div class="score-tile"><div class="t-label">Page</div><div class="t-val" id="gs-page">0</div><div class="t-max">/5</div></div>
+      <div class="score-tile"><div class="t-label">Régularité</div><div class="t-val" id="gs-publi">0</div><div class="t-max">/5</div></div>
+      <div class="score-tile"><div class="t-label">Engagement</div><div class="t-val" id="gs-engage">0</div><div class="t-max">/5</div></div>
+      <div class="score-tile"><div class="t-label">Contenu</div><div class="t-val" id="gs-contenu">0</div><div class="t-max">/5</div></div>
+      <div class="score-tile"><div class="t-label">Stratégie</div><div class="t-val" id="gs-strat">0</div><div class="t-max">/5</div></div>
+      <div class="score-tile"><div class="t-label">Concurrence</div><div class="t-val" id="gs-concur">0</div><div class="t-max">/5</div></div>
+    </div>
+    <div class="total-display">
+      <div><span class="total-number" id="total-num">0</span><span class="total-denom">/30</span></div>
+      <div class="total-label">Score global</div>
+      <div class="verdict-text" id="verdict">Remplissez le formulaire pour obtenir le verdict</div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button class="btn btn-primary" onclick="exportPDF()">📄 Exporter le rapport PDF</button>
+    <button class="btn btn-secondary" onclick="resetForm()">🔄 Nouvel audit</button>
+  </div>
+
+</div>
+
+<script>
+const scores = {
+  page:    [0,0,0,0,0],
+  publi:   [0,0,0],
+  engage:  0,
+  contenu: [0,0,0,0,0],
+  strat:   [0,0,0,0],
+  concur:  [0,0,0]
+};
+
+const maxS = { page:5, publi:5, engage:5, contenu:5, strat:5, concur:5 };
+
+function setScore(btn, type, val) {
+  const grp = btn.parentElement;
+  const sec = grp.dataset.section;
+  const idx = parseInt(grp.dataset.index);
+  grp.querySelectorAll('.opt-btn').forEach(b => b.className = 'opt-btn');
+  btn.classList.add('sel-' + type);
+  scores[sec][idx] = val;
+  updateSection(sec);
+  updateGlobal();
+}
+
+function updateSection(sec) {
+  const raw = scores[sec].reduce ? scores[sec].reduce((a,b)=>a+b,0) : scores[sec];
+  const capped = Math.min(raw, maxS[sec]);
+  const pct = Math.round((capped / maxS[sec]) * 100);
+  const display = Math.round(capped * 10) / 10;
+  document.getElementById('score-' + sec).textContent = display + ' / ' + maxS[sec];
+  document.getElementById('gs-' + sec).textContent = display;
+  document.getElementById('bar-' + sec).style.width = pct + '%';
+  document.getElementById('pct-' + sec).textContent = pct + '%';
+}
+
+function calcEngagement() {
+  const ab = parseFloat(document.getElementById('nb-abonnes').value) || 0;
+  const li = parseFloat(document.getElementById('nb-likes').value) || 0;
+  const co = parseFloat(document.getElementById('nb-comments').value) || 0;
+  if (!ab) return;
+  const taux = (li + co) / ab * 100;
+  const tauxR = Math.round(taux * 10) / 10;
+  let label='', bg='', color='', scoreVal=0;
+  if (taux >= 6)      { label='Excellent'; bg='#E1F5EE'; color='#0F6E56'; scoreVal=5; }
+  else if (taux >= 3) { label='Bon';       bg='#EAF3DE'; color='#3B6D11'; scoreVal=4; }
+  else if (taux >= 1) { label='Correct';   bg='#FAEEDA'; color='#854F0B'; scoreVal=2; }
+  else                { label='Faible';    bg='#FCEBEB'; color='#A32D2D'; scoreVal=1; }
+  document.getElementById('engage-result').textContent = 'Taux : ' + tauxR + '%';
+  const badge = document.getElementById('engage-badge');
+  badge.textContent = label;
+  badge.style.background = bg;
+  badge.style.color = color;
+  scores.engage = scoreVal;
+  const pct = Math.round((scoreVal / 5) * 100);
+  document.getElementById('score-engage').textContent = scoreVal + ' / 5';
+  document.getElementById('gs-engage').textContent = scoreVal;
+  document.getElementById('bar-engage').style.width = pct + '%';
+  document.getElementById('pct-engage').textContent = pct + '%';
+  updateGlobal();
+}
+
+function getTotal() {
+  return ['page','publi','engage','contenu','strat','concur'].reduce((sum, sec) => {
+    const raw = scores[sec].reduce ? scores[sec].reduce((a,b)=>a+b,0) : scores[sec];
+    return sum + Math.min(raw, maxS[sec]);
+  }, 0);
+}
+
+function updateGlobal() {
+  const total = Math.round(getTotal() * 10) / 10;
+  document.getElementById('total-num').textContent = total;
+  document.getElementById('header-score').textContent = total + ' / 30';
+  let verdict = '';
+  if (total === 0)    verdict = 'Remplissez le formulaire pour obtenir le verdict';
+  else if (total < 10) verdict = 'Présence très faible — potentiel énorme à exploiter';
+  else if (total < 18) verdict = 'Présence insuffisante — de nombreux axes d\'amélioration';
+  else if (total < 24) verdict = 'Présence correcte — des optimisations importantes restent à faire';
+  else                 verdict = 'Bonne présence — quelques ajustements pour exceller';
+  document.getElementById('verdict').textContent = verdict;
+}
+
+function updateHeader() {
+  const name = document.getElementById('client-name').value;
+  if (name) document.querySelector('.logo').innerHTML = 'Vitrine <span style="color:#FF6B00">Digitale</span> — ' + name;
+}
+
+function getScoreSec(sec) {
+  const raw = scores[sec].reduce ? scores[sec].reduce((a,b)=>a+b,0) : scores[sec];
+  return Math.round(Math.min(raw, maxS[sec]) * 10) / 10;
+}
+
+function stars(score, max) {
+  const filled = Math.round((score / max) * 5);
+  return '★'.repeat(filled) + '☆'.repeat(5 - filled);
+}
+
+function exportPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const W = 210, H = 297;
+  const margin = 18;
+  const navy = [26, 43, 74];
+  const orange = [255, 107, 0];
+  const gray = [136, 135, 128];
+  const lightgray = [248, 248, 246];
+  const green = [15, 110, 86];
+  const red = [163, 45, 45];
+  const amber = [133, 79, 11];
+
+  const clientName = document.getElementById('client-name').value || 'Commerce local';
+  const sector = document.getElementById('client-sector').value || 'Non renseigné';
+  const auditDate = document.getElementById('audit-date').value || new Date().toISOString().split('T')[0];
+  const insta = document.getElementById('insta').value || '—';
+  const fb = document.getElementById('fb').value || '—';
+  const followersInsta = document.getElementById('followers-insta').value || '—';
+  const followersFb = document.getElementById('followers-fb').value || '—';
+  const noteForts = document.getElementById('note-forts').value || 'Aucun point fort renseigné.';
+  const noteAmelio = document.getElementById('note-amelio').value || 'Aucun point d\'amélioration renseigné.';
+  const noteOffre = document.getElementById('note-offre').value || 'Aucune proposition renseignée.';
+  const total = Math.round(getTotal() * 10) / 10;
+
+  let verdict = '';
+  if (total < 10)      verdict = 'Présence très faible — potentiel énorme à exploiter';
+  else if (total < 18) verdict = 'Présence insuffisante — axes d\'amélioration importants';
+  else if (total < 24) verdict = 'Présence correcte — des optimisations restent à faire';
+  else                 verdict = 'Bonne présence — quelques ajustements pour exceller';
+
+  // ── PAGE 1 ──────────────────────────────────────────────────────────────
+  doc.setFillColor(...navy);
+  doc.rect(0, 0, W, 55, 'F');
+
+  doc.setFillColor(...orange);
+  doc.rect(0, 55, W, 3, 'F');
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(22);
+  doc.setFont('helvetica', 'bold');
+  doc.text('AUDIT RÉSEAUX SOCIAUX', margin, 22);
+
+  doc.setFontSize(13);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(200, 210, 230);
+  doc.text('Rapport d\'analyse — Vitrine Digitale', margin, 32);
+
+  doc.setFontSize(11);
+  doc.setTextColor(255, 107, 0);
+  doc.text(clientName.toUpperCase(), margin, 44);
+  doc.setTextColor(180, 190, 210);
+  doc.setFontSize(10);
+  doc.text('Date : ' + auditDate + '   |   Secteur : ' + sector, margin, 50);
+
+  // Score badge
+  doc.setFillColor(...orange);
+  doc.roundedRect(W - margin - 35, 16, 35, 20, 4, 4, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.text(total + '/30', W - margin - 17.5, 28, { align: 'center' });
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.text('score global', W - margin - 17.5, 33, { align: 'center' });
+
+  // Infos client
+  let y = 68;
+  doc.setFillColor(...lightgray);
+  doc.roundedRect(margin, y, W - margin*2, 32, 3, 3, 'F');
+  doc.setTextColor(...navy);
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
+  doc.text('INFORMATIONS DU COMPTE', margin + 5, y + 8);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(...gray);
+  const col1x = margin + 5, col2x = W/2 + 5;
+  doc.text('Instagram : ' + insta + '  (' + followersInsta + ' abonnés)', col1x, y + 16);
+  doc.text('Facebook : ' + fb + '  (' + followersFb + ' abonnés)', col1x, y + 23);
+  doc.text('Secteur : ' + sector, col2x, y + 16);
+  doc.text('Audit réalisé par : Vitrine Digitale', col2x, y + 23);
+
+  // Section scores
+  y = 108;
+  doc.setTextColor(...navy);
+  doc.setFontSize(13);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Résultats par axe d\'analyse', margin, y);
+  y += 8;
+
+  const sections = [
+    { label: 'Optimisation de la page',      sec: 'page',    max: 5 },
+    { label: 'Régularité de publication',    sec: 'publi',   max: 5 },
+    { label: "Taux d'engagement",            sec: 'engage',  max: 5 },
+    { label: 'Qualité du contenu',           sec: 'contenu', max: 5 },
+    { label: 'Stratégie éditoriale',         sec: 'strat',   max: 5 },
+    { label: 'Positionnement vs concurrence',sec: 'concur',  max: 5 },
+  ];
+
+  sections.forEach((s, i) => {
+    const score = getScoreSec(s.sec);
+    const pct = score / s.max;
+    const rowY = y + i * 22;
+    const isEven = i % 2 === 0;
+
+    if (isEven) {
+      doc.setFillColor(248, 248, 246);
+      doc.rect(margin, rowY - 4, W - margin*2, 20, 'F');
+    }
+
+    doc.setTextColor(...navy);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text(s.label, margin + 3, rowY + 4);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...gray);
+    doc.setFontSize(9);
+    doc.text(stars(score, s.max), margin + 3, rowY + 10);
+
+    const barX = margin + 90, barY = rowY + 2, barW = 75, barH = 5;
+    doc.setFillColor(220, 220, 220);
+    doc.roundedRect(barX, barY, barW, barH, 2, 2, 'F');
+
+    let barColor = pct >= 0.6 ? green : pct >= 0.35 ? amber : red;
+    doc.setFillColor(...barColor);
+    doc.roundedRect(barX, barY, barW * pct, barH, 2, 2, 'F');
+
+    doc.setTextColor(...navy);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text(score + '/' + s.max, W - margin - 3, rowY + 8, { align: 'right' });
+  });
+
+  // Verdict
+  y = y + sections.length * 22 + 8;
+  let verdictBg = total < 10 ? red : total < 18 ? amber : total < 24 ? [15,110,86] : green;
+  doc.setFillColor(...verdictBg);
+  doc.roundedRect(margin, y, W - margin*2, 16, 3, 3, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.text(verdict, W/2, y + 10, { align: 'center' });
+
+  // ── PAGE 2 ──────────────────────────────────────────────────────────────
+  doc.addPage();
+
+  doc.setFillColor(...navy);
+  doc.rect(0, 0, W, 20, 'F');
+  doc.setFillColor(...orange);
+  doc.rect(0, 20, W, 2, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'bold');
+  doc.text('RAPPORT COMPLET — ' + clientName.toUpperCase(), margin, 13);
+  doc.setTextColor(180, 190, 210);
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Vitrine Digitale  |  vitrinedigitale@gmail.com', W - margin, 13, { align: 'right' });
+
+  y = 32;
+
+  function drawSection(title, content, color) {
+    doc.setFillColor(...color);
+    doc.roundedRect(margin, y, 4, 14, 2, 2, 'F');
+    doc.setTextColor(...navy);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text(title, margin + 8, y + 9);
+    y += 18;
+    doc.setTextColor(...gray);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    const lines = doc.splitTextToSize(content, W - margin*2 - 6);
+    doc.text(lines, margin + 6, y);
+    y += lines.length * 5.5 + 10;
+  }
+
+  drawSection('Points forts identifiés', noteForts, green);
+  drawSection("Points d'amélioration", noteAmelio, [163, 45, 45]);
+  drawSection('Ma proposition concrète', noteOffre, orange);
+
+  // Bloc CTA
+  y = Math.max(y, H - 70);
+  doc.setFillColor(...navy);
+  doc.roundedRect(margin, y, W - margin*2, 45, 4, 4, 'F');
+  doc.setFillColor(...orange);
+  doc.roundedRect(margin, y, 4, 45, 2, 2, 'F');
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(13);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Passons à l\'action', margin + 10, y + 12);
+
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(200, 210, 230);
+  doc.text('Ce rapport a été réalisé gratuitement par Vitrine Digitale.', margin + 10, y + 20);
+  doc.text('Fort de 12 ans d\'expérience en grande distribution, je comprends', margin + 10, y + 27);
+  doc.text('vos enjeux commerciaux et je sais ce qui fait venir les clients.', margin + 10, y + 34);
+
+  doc.setTextColor(...orange);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.text('vitrinedigitale@gmail.com', margin + 10, y + 42);
+
+  doc.save('Audit-' + clientName.replace(/\s+/g, '-') + '-VitrinDigitale.pdf');
+}
+
+function resetForm() {
+  if (!confirm('Réinitialiser le formulaire ? Toutes les données seront perdues.')) return;
+  location.reload();
+}
+
+document.getElementById('audit-date').value = new Date().toISOString().split('T')[0];
+</script>
+</body>
+</html>
